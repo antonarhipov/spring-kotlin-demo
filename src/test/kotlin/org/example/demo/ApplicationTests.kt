@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.get
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class SpringKotlinDemoApplicationTests {
+class ApplicationTests {
 
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -30,6 +30,15 @@ class SpringKotlinDemoApplicationTests {
             .andExpect {
                 status { isOk() }
                 content { string(org.hamcrest.Matchers.containsString("default mode")) }
+            }
+    }
+
+    @Test
+    fun `ai route is unavailable when not configured`() {
+        mockMvc.get("/api/ai/hello/Ada")
+            .andExpect {
+                status { isServiceUnavailable() }
+                content { string(org.hamcrest.Matchers.containsString("AI not configured")) }
             }
     }
 }
