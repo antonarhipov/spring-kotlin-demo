@@ -31,8 +31,13 @@ class DemoRoutes(
         }
         GET("/api/ai/hello/{name}") { request: ServerRequest ->
             val name = request.pathVariable("name")
-            val message = demoAiGreeter.ifAvailable?.message(name) ?: "Hello $name."
-            ServerResponse.ok().body(mapOf("message" to message))
+            val aiGreeter = demoAiGreeter.ifAvailable
+            if (aiGreeter == null) {
+                ServerResponse.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .body(mapOf("message" to "AI not configured"))
+            } else {
+                ServerResponse.ok().body(mapOf("message" to aiGreeter.message(name)))
+            }
         }
     }
 }
