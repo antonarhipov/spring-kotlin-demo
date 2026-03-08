@@ -16,7 +16,7 @@ class GreetingsRegistrar : BeanRegistrarDsl({
     }
 
     val aiEnabled = env.getProperty<Boolean>("demo.ai.enabled", false)
-    val apiKeyProperty = env.getProperty("spring.ai.openai.api-key")?.trim()
+    val apiKeyProperty = env.getProperty<String>("spring.ai.openai.api-key")?.trim()
     val resolvedApiKey = apiKeyProperty?.let { env.resolvePlaceholders(it).trim() }
     if (aiEnabled && !resolvedApiKey.isNullOrBlank()) {
         registerBean { AiGreeter(bean(), bean()) }
